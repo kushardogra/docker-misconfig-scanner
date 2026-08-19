@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>docker-misconfig-scanner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d1117;
+      --surface:   #161b22;
+      --surface2:  #1c2128;
+      --border:    #30363d;
+      --blue:      #2496ED;
+      --blue-dim:  #1a6fad;
+      --green:     #3fb950;
+      --red:       #f85149;
+      --orange:    #d29922;
+      --yellow:    #e3b341;
+      --text:      #e6edf3;
+      --muted:     #8b949e;
+      --radius:    6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 17, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .nav-brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-brand span { color: var(--blue); }
+
+    .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .btn-github {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text) !important;
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .btn-github:hover {
+      border-color: var(--blue);
+      background: var(--surface2);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 2rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--blue);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-title .accent { color: var(--blue); }
+
+    .hero-desc {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--blue);
+      color: #fff;
+      text-decoration: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.15s;
+    }
+
+    .btn-primary:hover { background: var(--blue-dim); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: transparent;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      transition: border-color 0.15s;
+    }
+
+    .btn-secondary:hover { border-color: var(--blue); }
+
+    /* ── TERMINAL ── */
+    .terminal {
+      background: #010409;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .terminal-bar {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red    { background: #ff5f57; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green  { background: #28ca41; }
+
+    .terminal-title {
+      margin-left: 0.5rem;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .terminal-body { padding: 1.25rem; min-height: 280px; }
+
+    .t-line { display: flex; margin-bottom: 0.25rem; }
+    .t-prompt { color: var(--green); margin-right: 0.5rem; white-space: nowrap; }
+    .t-cmd    { color: var(--text); }
+    .t-blank  { margin-bottom: 0.5rem; }
+
+    .t-header {
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.3rem;
+      display: grid;
+      grid-template-columns: 115px 100px 1fr 1fr;
+    }
+
+    .t-finding {
+      display: grid;
+      grid-template-columns: 115px 100px 1fr 1fr;
+      margin-bottom: 0.15rem;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .t-finding.visible { opacity: 1; transform: translateY(0); }
+
+    .sev-critical { color: var(--red); }
+    .sev-high     { color: var(--orange); }
+    .sev-medium   { color: var(--yellow); }
+    .t-file       { color: var(--muted); font-size: 0.7rem; }
+
+    .t-summary {
+      margin-top: 0.75rem;
+      color: var(--red);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .t-summary.visible { opacity: 1; }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--green);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      padding: 1.5rem 2rem;
+    }
+
+    .stats-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--blue);
+    }
+
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
+
+    /* ── SECTIONS ── */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--blue);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-desc { color: var(--muted); max-width: 560px; line-height: 1.7; }
+
+    /* ── RULES TABLE ── */
+    .rules-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      font-size: 0.875rem;
+    }
+
+    .rules-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: left;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rules-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(48,54,61,0.5);
+      vertical-align: top;
+    }
+
+    .rules-table tr:hover td { background: var(--surface2); }
+
+    .rule-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-critical { background: rgba(248,81,73,0.15); color: var(--red);    border: 1px solid rgba(248,81,73,0.3); }
+    .badge-high     { background: rgba(210,153,34,0.15); color: var(--orange); border: 1px solid rgba(210,153,34,0.3); }
+    .badge-medium   { background: rgba(227,179,65,0.15); color: var(--yellow); border: 1px solid rgba(227,179,65,0.3); }
+
+    .rule-desc { color: var(--muted); font-size: 0.85rem; }
+
+    /* ── INSTALL ── */
+    .install-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .code-block {
+      background: #010409;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .code-block-label {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 0.4rem 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .code-block pre {
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+      overflow-x: auto;
+      line-height: 1.8;
+    }
+
+    .code-block pre .cmd-blue   { color: var(--blue); }
+    .code-block pre .cmd-green  { color: var(--green); }
+    .code-block pre .cmd-muted  { color: var(--muted); }
+
+    /* ── BACKGROUND STORY ── */
+    .story-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--red);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .story-card p { color: var(--muted); line-height: 1.8; margin-bottom: 0.75rem; }
+    .story-card p:last-child { margin-bottom: 0; }
+    .story-card strong { color: var(--text); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    footer a { color: var(--blue); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; padding: 3rem 1.25rem 2rem; }
+      .hero-title { font-size: 1.7rem; }
+      .install-grid { grid-template-columns: 1fr; }
+      .t-header, .t-finding { grid-template-columns: 100px 80px 1fr; }
+      .t-file { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .t-finding, .t-summary { transition: none; }
+      .cursor { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">🐳 <span>docker</span>-misconfig-scanner</a>
+  <div class="nav-links">
+    <a href="#rules">Rules</a>
+    <a href="#install">Install</a>
+    <a href="#background">Background</a>
+    <a class="btn-github" href="https://github.com/kushardogra/docker-misconfig-scanner" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-copy">
+    <div class="hero-eyebrow">Open Source · Static Analysis · Go</div>
+    <h1 class="hero-title">
+      Catch Docker<br/>
+      misconfigs<br/>
+      <span class="accent">before they breach.</span>
+    </h1>
+    <p class="hero-desc">
+      A fast CLI scanner that detects insecure defaults in Dockerfiles and
+      docker-compose files — containers running as root, exposed Docker sockets,
+      baked-in secrets, and more.
+    </p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#install">Get Started →</a>
+      <a class="btn-secondary" href="https://github.com/kushardogra/docker-misconfig-scanner" target="_blank">
+        View Source
+      </a>
+    </div>
+  </div>
+
+  <!-- ANIMATED TERMINAL -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yellow"></div>
+      <div class="dot dot-green"></div>
+      <span class="terminal-title">bash — docker-misconfig-scanner</span>
+    </div>
+    <div class="terminal-body">
+      <div class="t-line">
+        <span class="t-prompt">❯</span>
+        <span class="t-cmd">./scan ./project/</span>
+      </div>
+      <div class="t-blank"></div>
+      <div class="t-header">
+        <span>RULE ID</span><span>SEVERITY</span><span>TITLE</span><span>FILE</span>
+      </div>
+      <div class="t-finding" id="f1">
+        <span class="rule-id">DOCKER-001</span>
+        <span class="sev-high">HIGH</span>
+        <span>Missing USER directive</span>
+        <span class="t-file">Dockerfile</span>
+      </div>
+      <div class="t-finding" id="f2">
+        <span class="rule-id">DOCKER-002</span>
+        <span class="sev-medium">MEDIUM</span>
+        <span>Unpinned base image</span>
+        <span class="t-file">Dockerfile:1</span>
+      </div>
+      <div class="t-finding" id="f3">
+        <span class="rule-id">DOCKER-003</span>
+        <span class="sev-critical">CRITICAL</span>
+        <span>Secret in ENV</span>
+        <span class="t-file">Dockerfile:4</span>
+      </div>
+      <div class="t-finding" id="f4">
+        <span class="rule-id">COMPOSE-001</span>
+        <span class="sev-critical">CRITICAL</span>
+        <span>Docker socket mounted</span>
+        <span class="t-file">docker-compose.yml</span>
+      </div>
+      <div class="t-finding" id="f5">
+        <span class="rule-id">COMPOSE-002</span>
+        <span class="sev-critical">CRITICAL</span>
+        <span>Privileged container</span>
+        <span class="t-file">docker-compose.yml</span>
+      </div>
+      <div class="t-finding" id="f6">
+        <span class="rule-id">COMPOSE-003</span>
+        <span class="sev-high">HIGH</span>
+        <span>Host network mode</span>
+        <span class="t-file">docker-compose.yml</span>
+      </div>
+      <div class="t-summary" id="summary">
+        7 finding(s) detected.
+      </div>
+      <div class="t-blank"></div>
+      <div class="t-line">
+        <span class="t-prompt">❯</span>
+        <span class="cursor"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-num">6</div>
+      <div class="stat-label">Detection Rules</div>
+    </div>
+    <div>
+      <div class="stat-num">2</div>
+      <div class="stat-label">Target File Types</div>
+    </div>
+    <div>
+      <div class="stat-num">Go</div>
+      <div class="stat-label">Single Binary · No Runtime</div>
+    </div>
+    <div>
+      <div class="stat-num">MIT</div>
+      <div class="stat-label">Open Source License</div>
+    </div>
+  </div>
+</div>
+
+<!-- RULES -->
+<section id="rules">
+  <div class="section-label">Detection Coverage</div>
+  <h2 class="section-title">What it catches</h2>
+  <p class="section-desc">
+    Each rule targets a specific misconfiguration class with a typed ID, severity rating, and remediation guidance.
+  </p>
+
+  <table class="rules-table">
+    <thead>
+      <tr>
+        <th>Rule ID</th>
+        <th>Severity</th>
+        <th>Target</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="rule-id">DOCKER-001</span></td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td class="rule-desc">Dockerfile</td>
+        <td class="rule-desc">Missing USER directive — container runs as root by default</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">DOCKER-002</span></td>
+        <td><span class="badge badge-medium">MEDIUM</span></td>
+        <td class="rule-desc">Dockerfile</td>
+        <td class="rule-desc">Unpinned base image — <code>latest</code> tag or no tag causes non-reproducible builds</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">DOCKER-003</span></td>
+        <td><span class="badge badge-critical">CRITICAL</span></td>
+        <td class="rule-desc">Dockerfile</td>
+        <td class="rule-desc">Potential secret baked into ENV or ARG instruction</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">COMPOSE-001</span></td>
+        <td><span class="badge badge-critical">CRITICAL</span></td>
+        <td class="rule-desc">docker-compose</td>
+        <td class="rule-desc">Docker socket bind-mounted into container — full host control possible</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">COMPOSE-002</span></td>
+        <td><span class="badge badge-critical">CRITICAL</span></td>
+        <td class="rule-desc">docker-compose</td>
+        <td class="rule-desc"><code>privileged: true</code> grants the container all host kernel capabilities</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">COMPOSE-003</span></td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td class="rule-desc">docker-compose</td>
+        <td class="rule-desc"><code>network_mode: host</code> bypasses Docker's network namespace isolation</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- INSTALL -->
+<section id="install" style="border-top: 1px solid var(--border);">
+  <div class="section-label">Getting Started</div>
+  <h2 class="section-title">Install &amp; run in 3 commands</h2>
+  <p class="section-desc">Requires Go 1.21+. No dependencies to install separately — everything compiles into a single binary.</p>
+
+  <div class="install-grid">
+    <div class="code-block">
+      <div class="code-block-label">Build from source</div>
+      <pre><span class="cmd-muted"># Clone and build</span>
+<span class="cmd-blue">git clone</span> https://github.com/kushardogra/docker-misconfig-scanner
+<span class="cmd-blue">cd</span> docker-misconfig-scanner
+<span class="cmd-blue">go build</span> ./cmd/scan/</pre>
+    </div>
+    <div class="code-block">
+      <div class="code-block-label">Scan your project</div>
+      <pre><span class="cmd-muted"># Scan a directory</span>
+<span class="cmd-green">./scan</span> ./your-project/
+
+<span class="cmd-muted"># JSON output for pipelines</span>
+<span class="cmd-green">./scan</span> ./your-project/ <span class="cmd-blue">-o json</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- BACKGROUND -->
+<section id="background" style="border-top: 1px solid var(--border);">
+  <div class="section-label">Origin</div>
+  <h2 class="section-title">Built from a real incident</h2>
+  <p class="section-desc">This tool didn't start as a side project. It started as a post-mortem.</p>
+
+  <div class="story-card">
+    <p>
+      A production environment running Docker with UFW enabled was breached via ransomware. The root cause:
+      <strong>Docker manipulates iptables directly</strong>, creating its own <code>DOCKER</code> chain that silently
+      bypasses UFW rules entirely. Combined with containers running on default credentials and no USER directive,
+      attackers had full access.
+    </p>
+    <p>
+      UFW reported all rules as active. No alerts fired. The firewall appeared to be working — it wasn't.
+      This is Docker's default behavior, not a bug, which makes it far more dangerous.
+    </p>
+    <p>
+      <strong>docker-misconfig-scanner</strong> was built to catch these conditions statically, before a container
+      ever runs. The tool's detection logic also underpins an ongoing empirical study of misconfiguration
+      prevalence across public GitHub repositories.
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    MIT License &nbsp;·&nbsp;
+    Built by <a href="https://github.com/kushardogra" target="_blank">Kushar Dogra</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/kushardogra/docker-misconfig-scanner" target="_blank">github.com/kushardogra/docker-misconfig-scanner</a>
+  </p>
+</footer>
+
+<script>
+  // Animate terminal findings on load
+  const findings = ['f1','f2','f3','f4','f5','f6'];
+  findings.forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('visible');
+    }, 800 + i * 350);
+  });
+
+  setTimeout(() => {
+    const s = document.getElementById('summary');
+    if (s) s.classList.add('visible');
+  }, 800 + findings.length * 350 + 200);
+</script>
+
+</body>
+</html>
