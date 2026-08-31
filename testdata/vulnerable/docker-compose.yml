@@ -4,7 +4,17 @@ services:
     image: nginx:latest
     privileged: true
     network_mode: host
+    pid: host
+    ipc: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "0.0.0.0:80:80"
+    environment:
+      - DB_PASSWORD=supersecret123
+      - API_TOKEN=mytoken
+
+  api:
+    image: node
+    ports:
+      - "0.0.0.0:3000:3000"
