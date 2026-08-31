@@ -28,14 +28,35 @@ Docker's default behavior is insecure. Containers run as root, base images go un
 
 ## Detected Misconfigurations
 
-| Rule ID      | Severity | Target         | Description                                      |
-|--------------|----------|----------------|--------------------------------------------------|
-| DOCKER-001   | HIGH     | Dockerfile     | Missing USER directive — container runs as root  |
-| DOCKER-002   | MEDIUM   | Dockerfile     | Unpinned base image (latest tag or no tag)       |
-| DOCKER-003   | CRITICAL | Dockerfile     | Potential secret in ENV or ARG instruction       |
-| COMPOSE-001  | CRITICAL | docker-compose | Docker socket mounted into container             |
-| COMPOSE-002  | CRITICAL | docker-compose | Container running in privileged mode             |
-| COMPOSE-003  | HIGH     | docker-compose | Host network mode bypasses network isolation     |
+### Dockerfile Rules
+
+| Rule ID     | Severity | Description                                          |
+|-------------|----------|------------------------------------------------------|
+| DOCKER-001  | HIGH     | Missing USER directive — container runs as root      |
+| DOCKER-002  | MEDIUM   | Unpinned base image (latest tag or no tag)           |
+| DOCKER-003  | CRITICAL | Potential secret in ENV or ARG instruction           |
+| DOCKER-004  | MEDIUM   | ADD used instead of COPY (supply chain risk)         |
+| DOCKER-005  | LOW      | Missing HEALTHCHECK instruction                      |
+| DOCKER-006  | MEDIUM   | Development environment variable in image            |
+| DOCKER-007  | CRITICAL | Explicit USER root in Dockerfile                     |
+| DOCKER-008  | CRITICAL | curl or wget piped directly to shell                 |
+| DOCKER-009  | MEDIUM   | Overly broad COPY (entire build context)             |
+| DOCKER-010  | HIGH     | SSH private key copied into image                    |
+
+### docker-compose Rules
+
+| Rule ID      | Severity | Description                                          |
+|--------------|----------|------------------------------------------------------|
+| COMPOSE-001  | CRITICAL | Docker socket mounted into container                 |
+| COMPOSE-002  | CRITICAL | Container running in privileged mode                 |
+| COMPOSE-003  | HIGH     | Host network mode bypasses network isolation         |
+| COMPOSE-004  | MEDIUM   | No resource limits (memory/CPU) defined              |
+| COMPOSE-005  | HIGH     | Port bound to all interfaces (0.0.0.0)               |
+| COMPOSE-006  | HIGH     | Hardcoded secret in environment block                |
+| COMPOSE-007  | CRITICAL | Container shares host PID namespace                  |
+| COMPOSE-008  | HIGH     | Container shares host IPC namespace                  |
+| COMPOSE-009  | MEDIUM   | no-new-privileges not set                            |
+| COMPOSE-010  | HIGH     | Unpinned image tag in compose service                |
 
 ---
 
@@ -76,13 +97,15 @@ go build ./cmd/scan/
 RULE ID       SEVERITY   TITLE                                          FILE
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
 DOCKER-001    HIGH       Container runs as root (missing USER)          Dockerfile
-DOCKER-002    MEDIUM     Unpinned base image                            Dockerfile:1
+DOCKER-002    MEDIUM     Unpinned base image                            Dockerfile:2
 DOCKER-003    CRITICAL   Potential secret in ENV                        Dockerfile:4
+DOCKER-007    CRITICAL   Explicit USER root in Dockerfile               Dockerfile:14
+DOCKER-008    CRITICAL   curl/wget piped to shell                       Dockerfile:9
 COMPOSE-001   CRITICAL   Docker socket mounted into container           docker-compose.yml
 COMPOSE-002   CRITICAL   Privileged container                           docker-compose.yml
-COMPOSE-003   HIGH       Host network mode                              docker-compose.yml
+COMPOSE-007   CRITICAL   Container shares host PID namespace            docker-compose.yml
 
-7 finding(s) detected.
+25 finding(s) detected.
 ```
 
 ---
@@ -100,6 +123,21 @@ docker-misconfig-scanner/
 │   └── report/          # Table and JSON output formatters
 └── testdata/vulnerable/ # Sample misconfigured files for testing
 ```
+
+---
+
+## Changelog
+
+### v0.2.0
+- Expanded from 6 to 20 detection rules
+- Added DOCKER-004 through DOCKER-010
+- Added COMPOSE-004 through COMPOSE-010
+- Expanded testdata covering all 20 rules
+
+### v0.1.0
+- Initial release with 6 detection rules
+- Dockerfile and docker-compose static analysis
+- Table and JSON output formats
 
 ---
 
