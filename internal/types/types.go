@@ -31,6 +31,11 @@ type ComposeService struct {
 	Ports       []string `yaml:"ports"`
 	Environment []string `yaml:"environment"`
 	User        string   `yaml:"user"`
+	MemLimit    string   `yaml:"mem_limit"`
+	CPUs        string   `yaml:"cpus"`
+	Pid         string   `yaml:"pid"`
+	Ipc         string   `yaml:"ipc"`
+	SecurityOpt []string `yaml:"security_opt"`
 }
 
 type ComposeFile struct {
