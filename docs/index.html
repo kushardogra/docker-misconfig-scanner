@@ -20,6 +20,7 @@
       --red:       #f85149;
       --orange:    #d29922;
       --yellow:    #e3b341;
+      --teal:      #39d353;
       --text:      #e6edf3;
       --muted:     #8b949e;
       --radius:    6px;
@@ -35,7 +36,7 @@
       line-height: 1.6;
     }
 
-    /* ── NAV ── */
+    /* NAV */
     nav {
       position: sticky;
       top: 0;
@@ -62,7 +63,6 @@
     }
 
     .nav-brand span { color: var(--blue); }
-
     .nav-links { display: flex; align-items: center; gap: 1.5rem; }
 
     .nav-links a {
@@ -88,12 +88,9 @@
       transition: border-color 0.15s, background 0.15s;
     }
 
-    .btn-github:hover {
-      border-color: var(--blue);
-      background: var(--surface2);
-    }
+    .btn-github:hover { border-color: var(--blue); background: var(--surface2); }
 
-    /* ── HERO ── */
+    /* HERO */
     .hero {
       max-width: 1100px;
       margin: 0 auto;
@@ -164,7 +161,7 @@
 
     .btn-secondary:hover { border-color: var(--blue); }
 
-    /* ── TERMINAL ── */
+    /* TERMINAL */
     .terminal {
       background: #010409;
       border: 1px solid var(--border);
@@ -189,13 +186,8 @@
     .dot-yellow { background: #ffbd2e; }
     .dot-green  { background: #28ca41; }
 
-    .terminal-title {
-      margin-left: 0.5rem;
-      color: var(--muted);
-      font-size: 0.7rem;
-    }
-
-    .terminal-body { padding: 1.25rem; min-height: 280px; }
+    .terminal-title { margin-left: 0.5rem; color: var(--muted); font-size: 0.7rem; }
+    .terminal-body { padding: 1.25rem; min-height: 320px; }
 
     .t-line { display: flex; margin-bottom: 0.25rem; }
     .t-prompt { color: var(--green); margin-right: 0.5rem; white-space: nowrap; }
@@ -225,6 +217,7 @@
     .sev-critical { color: var(--red); }
     .sev-high     { color: var(--orange); }
     .sev-medium   { color: var(--yellow); }
+    .sev-low      { color: var(--teal); }
     .t-file       { color: var(--muted); font-size: 0.7rem; }
 
     .t-summary {
@@ -248,7 +241,7 @@
 
     @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 
-    /* ── STATS BAR ── */
+    /* STATS BAR */
     .stats-bar {
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
@@ -275,7 +268,7 @@
 
     .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
 
-    /* ── SECTIONS ── */
+    /* SECTIONS */
     section {
       max-width: 1100px;
       margin: 0 auto;
@@ -300,11 +293,23 @@
 
     .section-desc { color: var(--muted); max-width: 560px; line-height: 1.7; }
 
-    /* ── RULES TABLE ── */
+    /* RULES TABLE */
+    .rules-group-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
     .rules-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 2rem;
+      margin-bottom: 0.5rem;
       font-size: 0.875rem;
     }
 
@@ -320,7 +325,7 @@
     }
 
     .rules-table td {
-      padding: 0.75rem 1rem;
+      padding: 0.65rem 1rem;
       border-bottom: 1px solid rgba(48,54,61,0.5);
       vertical-align: top;
     }
@@ -343,13 +348,14 @@
       letter-spacing: 0.05em;
     }
 
-    .badge-critical { background: rgba(248,81,73,0.15); color: var(--red);    border: 1px solid rgba(248,81,73,0.3); }
+    .badge-critical { background: rgba(248,81,73,0.15);  color: var(--red);    border: 1px solid rgba(248,81,73,0.3); }
     .badge-high     { background: rgba(210,153,34,0.15); color: var(--orange); border: 1px solid rgba(210,153,34,0.3); }
     .badge-medium   { background: rgba(227,179,65,0.15); color: var(--yellow); border: 1px solid rgba(227,179,65,0.3); }
+    .badge-low      { background: rgba(63,185,80,0.12);  color: var(--teal);   border: 1px solid rgba(63,185,80,0.3); }
 
     .rule-desc { color: var(--muted); font-size: 0.85rem; }
 
-    /* ── INSTALL ── */
+    /* INSTALL */
     .install-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -382,11 +388,11 @@
       line-height: 1.8;
     }
 
-    .code-block pre .cmd-blue   { color: var(--blue); }
-    .code-block pre .cmd-green  { color: var(--green); }
-    .code-block pre .cmd-muted  { color: var(--muted); }
+    .code-block pre .cmd-blue  { color: var(--blue); }
+    .code-block pre .cmd-green { color: var(--green); }
+    .code-block pre .cmd-muted { color: var(--muted); }
 
-    /* ── BACKGROUND STORY ── */
+    /* BACKGROUND STORY */
     .story-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -400,7 +406,7 @@
     .story-card p:last-child { margin-bottom: 0; }
     .story-card strong { color: var(--text); }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer {
       border-top: 1px solid var(--border);
       padding: 2rem;
@@ -412,7 +418,7 @@
 
     footer a { color: var(--blue); text-decoration: none; }
 
-    /* ── RESPONSIVE ── */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       .hero { grid-template-columns: 1fr; padding: 3rem 1.25rem 2rem; }
       .hero-title { font-size: 1.7rem; }
@@ -446,7 +452,7 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-copy">
-    <div class="hero-eyebrow">Open Source · Static Analysis · Go · <a href="https://github.com/kushardogra/docker-misconfig-scanner/releases/tag/v0.1.0" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dashed var(--blue);">v0.1.0</a></div>
+    <div class="hero-eyebrow">Open Source · Static Analysis · Go · <a href="https://github.com/kushardogra/docker-misconfig-scanner/releases/tag/v0.2.0" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dashed var(--blue);">v0.2.0</a></div>
     <h1 class="hero-title">
       Catch Docker<br/>
       misconfigs<br/>
@@ -459,8 +465,8 @@
     </p>
     <div class="hero-actions">
       <a class="btn-primary" href="#install">Get Started →</a>
-      <a class="btn-secondary" href="https://github.com/kushardogra/docker-misconfig-scanner/releases/tag/v0.1.0" target="_blank">
-        🏷️ v0.1.0 Released
+      <a class="btn-secondary" href="https://github.com/kushardogra/docker-misconfig-scanner/releases/tag/v0.2.0" target="_blank">
+        🏷️ v0.2.0 Released
       </a>
     </div>
   </div>
@@ -483,43 +489,55 @@
         <span>RULE ID</span><span>SEVERITY</span><span>TITLE</span><span>FILE</span>
       </div>
       <div class="t-finding" id="f1">
-        <span class="rule-id">DOCKER-001</span>
-        <span class="sev-high">HIGH</span>
-        <span>Missing USER directive</span>
-        <span class="t-file">Dockerfile</span>
-      </div>
-      <div class="t-finding" id="f2">
-        <span class="rule-id">DOCKER-002</span>
-        <span class="sev-medium">MEDIUM</span>
-        <span>Unpinned base image</span>
-        <span class="t-file">Dockerfile:1</span>
-      </div>
-      <div class="t-finding" id="f3">
         <span class="rule-id">DOCKER-003</span>
         <span class="sev-critical">CRITICAL</span>
         <span>Secret in ENV</span>
         <span class="t-file">Dockerfile:4</span>
       </div>
+      <div class="t-finding" id="f2">
+        <span class="rule-id">DOCKER-007</span>
+        <span class="sev-critical">CRITICAL</span>
+        <span>Explicit USER root</span>
+        <span class="t-file">Dockerfile:14</span>
+      </div>
+      <div class="t-finding" id="f3">
+        <span class="rule-id">DOCKER-008</span>
+        <span class="sev-critical">CRITICAL</span>
+        <span>curl piped to shell</span>
+        <span class="t-file">Dockerfile:9</span>
+      </div>
       <div class="t-finding" id="f4">
+        <span class="rule-id">DOCKER-010</span>
+        <span class="sev-high">HIGH</span>
+        <span>SSH key in image</span>
+        <span class="t-file">Dockerfile:12</span>
+      </div>
+      <div class="t-finding" id="f5">
         <span class="rule-id">COMPOSE-001</span>
         <span class="sev-critical">CRITICAL</span>
         <span>Docker socket mounted</span>
         <span class="t-file">docker-compose.yml</span>
       </div>
-      <div class="t-finding" id="f5">
+      <div class="t-finding" id="f6">
         <span class="rule-id">COMPOSE-002</span>
         <span class="sev-critical">CRITICAL</span>
         <span>Privileged container</span>
         <span class="t-file">docker-compose.yml</span>
       </div>
-      <div class="t-finding" id="f6">
-        <span class="rule-id">COMPOSE-003</span>
+      <div class="t-finding" id="f7">
+        <span class="rule-id">COMPOSE-007</span>
+        <span class="sev-critical">CRITICAL</span>
+        <span>Host PID namespace</span>
+        <span class="t-file">docker-compose.yml</span>
+      </div>
+      <div class="t-finding" id="f8">
+        <span class="rule-id">COMPOSE-010</span>
         <span class="sev-high">HIGH</span>
-        <span>Host network mode</span>
+        <span>Unpinned image tag</span>
         <span class="t-file">docker-compose.yml</span>
       </div>
       <div class="t-summary" id="summary">
-        7 finding(s) detected.
+        25 finding(s) detected.
       </div>
       <div class="t-blank"></div>
       <div class="t-line">
@@ -534,7 +552,7 @@
 <div class="stats-bar">
   <div class="stats-inner">
     <div>
-      <div class="stat-num">6</div>
+      <div class="stat-num">20</div>
       <div class="stat-label">Detection Rules</div>
     </div>
     <div>
@@ -550,7 +568,7 @@
       <div class="stat-label">Open Source License</div>
     </div>
     <div>
-      <div class="stat-num">v0.1.0</div>
+      <div class="stat-num">v0.2.0</div>
       <div class="stat-label">Latest Release</div>
     </div>
   </div>
@@ -561,54 +579,129 @@
   <div class="section-label">Detection Coverage</div>
   <h2 class="section-title">What it catches</h2>
   <p class="section-desc">
-    Each rule targets a specific misconfiguration class with a typed ID, severity rating, and remediation guidance.
+    20 rules across Dockerfiles and docker-compose files — each with a typed ID, severity rating, and remediation guidance.
   </p>
 
+  <!-- Dockerfile Rules -->
+  <div class="rules-group-title">Dockerfile Rules</div>
   <table class="rules-table">
     <thead>
       <tr>
-        <th>Rule ID</th>
-        <th>Severity</th>
-        <th>Target</th>
-        <th>Description</th>
+        <th>Rule ID</th><th>Severity</th><th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><span class="rule-id">DOCKER-001</span></td>
         <td><span class="badge badge-high">HIGH</span></td>
-        <td class="rule-desc">Dockerfile</td>
         <td class="rule-desc">Missing USER directive — container runs as root by default</td>
       </tr>
       <tr>
         <td><span class="rule-id">DOCKER-002</span></td>
         <td><span class="badge badge-medium">MEDIUM</span></td>
-        <td class="rule-desc">Dockerfile</td>
         <td class="rule-desc">Unpinned base image — <code>latest</code> tag or no tag causes non-reproducible builds</td>
       </tr>
       <tr>
         <td><span class="rule-id">DOCKER-003</span></td>
         <td><span class="badge badge-critical">CRITICAL</span></td>
-        <td class="rule-desc">Dockerfile</td>
         <td class="rule-desc">Potential secret baked into ENV or ARG instruction</td>
       </tr>
       <tr>
+        <td><span class="rule-id">DOCKER-004</span></td>
+        <td><span class="badge badge-medium">MEDIUM</span></td>
+        <td class="rule-desc">ADD used instead of COPY — can fetch remote URLs, increasing supply chain risk</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">DOCKER-005</span></td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td class="rule-desc">Missing HEALTHCHECK instruction — Docker cannot detect container health</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">DOCKER-006</span></td>
+        <td><span class="badge badge-medium">MEDIUM</span></td>
+        <td class="rule-desc">Development environment variable detected — debug flags unsafe for production</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">DOCKER-007</span></td>
+        <td><span class="badge badge-critical">CRITICAL</span></td>
+        <td class="rule-desc">Explicit <code>USER root</code> — container runs with full root privileges</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">DOCKER-008</span></td>
+        <td><span class="badge badge-critical">CRITICAL</span></td>
+        <td class="rule-desc">curl or wget piped directly to shell — supply chain attack vector</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">DOCKER-009</span></td>
+        <td><span class="badge badge-medium">MEDIUM</span></td>
+        <td class="rule-desc">Overly broad <code>COPY . .</code> — copies entire build context including sensitive files</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">DOCKER-010</span></td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td class="rule-desc">SSH private key copied into image layer</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- docker-compose Rules -->
+  <div class="rules-group-title">docker-compose Rules</div>
+  <table class="rules-table">
+    <thead>
+      <tr>
+        <th>Rule ID</th><th>Severity</th><th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
         <td><span class="rule-id">COMPOSE-001</span></td>
         <td><span class="badge badge-critical">CRITICAL</span></td>
-        <td class="rule-desc">docker-compose</td>
-        <td class="rule-desc">Docker socket bind-mounted into container — full host control possible</td>
+        <td class="rule-desc">Docker socket bind-mounted into container — full host Docker control possible</td>
       </tr>
       <tr>
         <td><span class="rule-id">COMPOSE-002</span></td>
         <td><span class="badge badge-critical">CRITICAL</span></td>
-        <td class="rule-desc">docker-compose</td>
         <td class="rule-desc"><code>privileged: true</code> grants the container all host kernel capabilities</td>
       </tr>
       <tr>
         <td><span class="rule-id">COMPOSE-003</span></td>
         <td><span class="badge badge-high">HIGH</span></td>
-        <td class="rule-desc">docker-compose</td>
         <td class="rule-desc"><code>network_mode: host</code> bypasses Docker's network namespace isolation</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">COMPOSE-004</span></td>
+        <td><span class="badge badge-medium">MEDIUM</span></td>
+        <td class="rule-desc">No resource limits defined — runaway container can exhaust host memory/CPU</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">COMPOSE-005</span></td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td class="rule-desc">Port explicitly bound to <code>0.0.0.0</code> — exposed on all network interfaces</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">COMPOSE-006</span></td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td class="rule-desc">Hardcoded secret detected in environment block</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">COMPOSE-007</span></td>
+        <td><span class="badge badge-critical">CRITICAL</span></td>
+        <td class="rule-desc"><code>pid: host</code> — container can see and signal all host processes</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">COMPOSE-008</span></td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td class="rule-desc"><code>ipc: host</code> shares the host's inter-process communication namespace</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">COMPOSE-009</span></td>
+        <td><span class="badge badge-medium">MEDIUM</span></td>
+        <td class="rule-desc"><code>no-new-privileges</code> not set — allows privilege escalation via setuid binaries</td>
+      </tr>
+      <tr>
+        <td><span class="rule-id">COMPOSE-010</span></td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td class="rule-desc">Unpinned image tag in compose service — non-deterministic deployments</td>
       </tr>
     </tbody>
   </table>
@@ -672,24 +765,23 @@
     &nbsp;·&nbsp;
     <a href="https://github.com/kushardogra/docker-misconfig-scanner" target="_blank">github.com/kushardogra/docker-misconfig-scanner</a>
     &nbsp;·&nbsp;
-    <a href="https://github.com/kushardogra/docker-misconfig-scanner/releases/tag/v0.1.0" target="_blank">v0.1.0</a>
+    <a href="https://github.com/kushardogra/docker-misconfig-scanner/releases/tag/v0.2.0" target="_blank">v0.2.0</a>
   </p>
 </footer>
 
 <script>
-  // Animate terminal findings on load
-  const findings = ['f1','f2','f3','f4','f5','f6'];
+  const findings = ['f1','f2','f3','f4','f5','f6','f7','f8'];
   findings.forEach((id, i) => {
     setTimeout(() => {
       const el = document.getElementById(id);
       if (el) el.classList.add('visible');
-    }, 800 + i * 350);
+    }, 800 + i * 300);
   });
 
   setTimeout(() => {
     const s = document.getElementById('summary');
     if (s) s.classList.add('visible');
-  }, 800 + findings.length * 350 + 200);
+  }, 800 + findings.length * 300 + 200);
 </script>
 
 </body>
